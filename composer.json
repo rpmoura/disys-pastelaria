@@ -54,7 +54,8 @@
             "@php artisan key:generate --ansi"
         ],
         "format": "./vendor/bin/pint",
-        "analyse": "./vendor/bin/phpstan analyse --memory-limit=2G"
+        "analyse": "./vendor/bin/phpstan analyse --memory-limit=2G",
+        "test": "./vendor/bin/phpunit"
     },
     "extra": {
         "laravel": {
