@@ -2,16 +2,24 @@
 
 namespace App\Http\Middleware;
 
+use App\Enums\ErrorEnum;
 use Illuminate\Auth\Middleware\Authenticate as Middleware;
-use Illuminate\Http\Request;
+use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 
 class Authenticate extends Middleware
 {
-    /**
-     * Get the path the user should be redirected to when they are not authenticated.
-     */
-    protected function redirectTo(Request $request): ?string
+    public function authenticate($request, array $guards)
     {
-        return $request->expectsJson() ? null : route('login');
+        if (empty($guards)) {
+            $guards = [null];
+        }
+
+        foreach ($guards as $guard) {
+            if ($this->auth->guard($guard)->check()) {
+                return $this->auth->shouldUse($guard);
+            }
+        }
+
+        throw new AccessDeniedHttpException(__('auth.no_session'), null, ErrorEnum::ACCESS_DENIED->value);
     }
 }
