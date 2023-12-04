@@ -3,8 +3,11 @@
 namespace App\Exceptions;
 
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
-use Illuminate\Http\JsonResponse;
-use Symfony\Component\HttpKernel\Exception\{AccessDeniedHttpException, NotFoundHttpException};
+use Illuminate\Http\{Exceptions\HttpResponseException, JsonResponse, Response};
+use Symfony\Component\HttpKernel\Exception\{AccessDeniedHttpException,
+    BadRequestHttpException,
+    MethodNotAllowedHttpException,
+    NotFoundHttpException};
 use Throwable;
 
 class Handler extends ExceptionHandler
@@ -30,12 +33,16 @@ class Handler extends ExceptionHandler
         });
     }
 
-    public function render($request, Throwable $exception): JsonResponse
+    public function render($request, Throwable $exception): JsonResponse|Response
     {
         $code = method_exists($exception, 'getCode') ? $exception->getCode() : '-1';
 
         return match (true) {
-            $exception instanceof AccessDeniedHttpException, $exception instanceof NotFoundHttpException => response()->json(
+            $exception instanceof AccessDeniedHttpException,
+            $exception instanceof NotFoundHttpException,
+            $exception instanceof MethodNotAllowedHttpException,
+            $exception instanceof BadRequestHttpException,
+            $exception instanceof HttpResponseException => response()->json(
                 [
                     'code'    => $code,
                     'type'    => 'error',
