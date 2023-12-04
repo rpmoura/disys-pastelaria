@@ -36,6 +36,12 @@ RUN echo "xdebug.remote_handler=dbgp\n" >> /usr/local/etc/php/conf.d/docker-php-
 RUN echo "xdebug.max_nesting_level=1024\n" >> /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini
 RUN echo "xdebug.discover_client_host=true" >> /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini
 
+## REDIS
+RUN pecl install redis
+RUN echo "extension=redis.so" > /usr/local/etc/php/conf.d/redis.ini
+RUN echo "date.timezone=America/Sao_Paulo" > /usr/local/etc/php/conf.d/timezone_sao_paulo.ini
+RUN echo "memory_limit = 1024M" > /usr/local/etc/php/conf.d/memory_limit.ini
+
 ## COMPOSER
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
 
