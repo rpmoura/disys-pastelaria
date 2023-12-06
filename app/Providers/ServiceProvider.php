@@ -12,6 +12,7 @@ class ServiceProvider extends BaseServiceProvider
      */
     public function register(): void
     {
+        $this->app->bind(ClientServiceInterface::class, ClientService::class);
     }
 
     /**
