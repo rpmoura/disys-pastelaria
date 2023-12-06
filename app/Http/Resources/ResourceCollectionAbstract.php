@@ -9,9 +9,9 @@ use Illuminate\Support\Collection;
 
 abstract class ResourceCollectionAbstract extends ResourceCollection
 {
-    private array $links;
+    private ?array $links = null;
 
-    private array $meta;
+    private ?array $meta = null;
 
     public function __construct($resource)
     {
