@@ -132,4 +132,22 @@ class ClientServiceTest extends TestCase
         $this->assertInstanceOf(Collection::class, $result);
     }
 
+    /**
+     * @test
+     */
+    public function shouldDeleteClient()
+    {
+        $attributes     = Client::factory()->make(['id' => 1])->toArray();
+        $client = (new Client())->newInstance()->forceFill($attributes);
+
+        $this->repository->expects($this->once())
+            ->method('delete')
+            ->with(1)
+            ->willReturn(true);
+
+        $result = $this->service->delete($client);
+
+        $this->assertIsBool($result);
+        $this->assertTrue($result);
+    }
 }

@@ -155,4 +155,17 @@ class ClientRepositoryTest extends TestCase
 
         $this->assertInstanceOf(LengthAwarePaginator::class, $result);
     }
+
+    /**
+     * @test
+     */
+    public function shouldDeleteClient()
+    {
+        $client = Client::factory()->create();
+
+        $result = $this->repository->delete($client->id);
+
+        $this->assertIsBool($result);
+        $this->assertTrue($result);
+    }
 }
