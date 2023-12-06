@@ -115,6 +115,7 @@ class ClientRepositoryTest extends TestCase
         $result = $this->repository->all();
 
         $this->assertInstanceOf(Collection::class, $result);
+
         foreach ($result as $client) {
             $this->assertInstanceOf(Client::class, $client);
         }
@@ -130,6 +131,7 @@ class ClientRepositoryTest extends TestCase
         $result = $this->repository->get();
 
         $this->assertInstanceOf(Collection::class, $result);
+
         foreach ($result as $client) {
             $this->assertInstanceOf(Client::class, $client);
         }
@@ -141,10 +143,9 @@ class ClientRepositoryTest extends TestCase
     public function shouldReturnPaginatedResults()
     {
         $mockContainer = \Mockery::mock(new Application());
-        $this->mock(Application::class, fn() => $mockContainer);
+        $this->mock(Application::class, fn () => $mockContainer);
         $mockContainer->expects('make')->twice()->withArgs([Client::class])->andReturn(new Client());
         $mockContainer->expects('make')->once()->withArgs(['request'])->andReturn(new Request());
-
 
         $repository = new ClientRepository($mockContainer);
 
