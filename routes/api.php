@@ -17,11 +17,12 @@ Route::get('/health-check', function () {
     return response()->json(['message' => 'OK'], 200);
 });
 
-Route::namespace('V1')->middleware('auth:sanctum')->prefix('v1')->group(
+Route::namespace('V1')->prefix('v1')->group(
     function () {
         /*
          * Call route files based on context
          * Example: require base_path('routes/api/v1/clients.php');
          */
+        require base_path('routes/api/v1/clients.php');
     }
 );
