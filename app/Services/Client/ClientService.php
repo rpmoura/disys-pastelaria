@@ -37,4 +37,9 @@ class ClientService implements ClientServiceInterface
     {
         return $this->repository;
     }
+
+    public function delete(Client $client): bool
+    {
+        return $this->repository->delete($client->id);
+    }
 }
