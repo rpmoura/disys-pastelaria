@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Unit\Services;
+namespace Tests\Unit\Services\Client;
 
 use App\Models\Client;
 use App\Repositories\Client\{ClientRepository, ClientRepositoryInterface};
@@ -137,8 +137,8 @@ class ClientServiceTest extends TestCase
      */
     public function shouldDeleteClient()
     {
-        $attributes     = Client::factory()->make(['id' => 1])->toArray();
-        $client = (new Client())->newInstance()->forceFill($attributes);
+        $attributes = Client::factory()->make(['id' => 1])->toArray();
+        $client     = (new Client())->newInstance()->forceFill($attributes);
 
         $this->repository->expects($this->once())
             ->method('delete')
