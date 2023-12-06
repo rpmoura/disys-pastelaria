@@ -122,5 +122,10 @@ abstract class BaseRepository implements BaseRepositoryInterface
         return $this->all($columns);
     }
 
+    public function delete(int $id)
+    {
+        return $this->model->findOrFail($id)->delete();
+    }
+
     abstract public function model(): string;
 }
