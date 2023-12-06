@@ -18,7 +18,7 @@ abstract class RequestAbstract extends FormRequest
     protected function failedValidation(Validator $validator)
     {
         $response['type']    = 'error';
-        $response['code']    = ErrorEnum::VALIDATE_FORM;
+        $response['code']    = ErrorEnum::VALIDATE_FORM->value;
         $response['message'] = $validator->errors()->all()[0];
         $response['field']   = $validator->errors()->keys()[0];
 
