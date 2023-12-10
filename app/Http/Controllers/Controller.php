@@ -13,17 +13,12 @@ abstract class Controller extends BaseController
     use AuthorizesRequests;
     use ValidatesRequests;
 
-    protected array $response;
-
-    public function __construct()
-    {
-        $this->response = [
-            'type'    => 'success',
-            'code'    => 0,
-            'message' => null,
-            'data'    => null,
-        ];
-    }
+    protected array $response = [
+        'type'    => 'success',
+        'code'    => 0,
+        'message' => null,
+        'data'    => null,
+    ];
 
     protected function buildResponseError($exception, int $codeStatus): JsonResponse
     {
