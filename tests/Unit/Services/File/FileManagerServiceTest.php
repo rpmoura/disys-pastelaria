@@ -1,6 +1,6 @@
 <?php
 
-namespace Services\File;
+namespace Tests\Unit\Services\File;
 
 use App\DTO\{FileDelete, FileUpload};
 use App\Exceptions\FileException;
