@@ -24,5 +24,7 @@ Route::namespace('V1')->prefix('v1')->group(
          * Example: require base_path('routes/api/v1/clients.php');
          */
         require base_path('routes/api/v1/clients.php');
+
+        require base_path('routes/api/v1/products.php');
     }
 );
