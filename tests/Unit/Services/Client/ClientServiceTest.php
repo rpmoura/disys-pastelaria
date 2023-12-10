@@ -69,14 +69,16 @@ class ClientServiceTest extends TestCase
      */
     public function shouldNotFoundClientByField()
     {
+        $uuid = fake()->uuid();
+
         $this->repository->expects($this->once())
             ->method('findBy')
-            ->with('uuid', )
+            ->with('uuid', $uuid)
             ->willReturn(new Collection());
 
         $this->expectException(NotFoundHttpException::class);
 
-        $this->service->findOneBy('uuid', fake()->uuid());
+        $this->service->findOneBy('uuid', $uuid);
     }
 
     /**
@@ -89,7 +91,7 @@ class ClientServiceTest extends TestCase
 
         $this->repository->expects($this->once())
             ->method('findBy')
-            ->with('uuid', )
+            ->with('uuid', $client->uuid)
             ->willReturn(new Collection([$client]));
 
         $result = $this->service->findOneBy('uuid', $client->uuid);
