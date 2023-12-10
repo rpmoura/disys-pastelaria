@@ -11,4 +11,12 @@ interface BaseRepositoryInterface
     public function create(array $attributes);
 
     public function update(array $attributes, int $id);
+
+    public function paginate(int $limit = null, array $columns = ['*'], string $method = "paginate");
+
+    public function all(array $columns = ['*']);
+
+    public function get(array $columns = ['*']);
+
+    public function delete(int $id);
 }

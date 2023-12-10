@@ -6,7 +6,7 @@ use App\Traits\Uuid\UseUuid;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\{Concerns\HasTimestamps, Model, SoftDeletes};
 
-class TableModelAbstract extends Model
+abstract class TableModelAbstract extends Model
 {
     use HasFactory;
     use SoftDeletes;

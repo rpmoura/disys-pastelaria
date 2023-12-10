@@ -15,7 +15,6 @@ class ClientController extends Controller
 {
     public function __construct(private readonly ClientServiceInterface $clientService)
     {
-        parent::__construct();
     }
 
     public function post(CreateClientRequest $request): JsonResponse
