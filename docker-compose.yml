@@ -11,6 +11,7 @@ services:
     working_dir: /var/www/
     volumes:
       - ./:/var/www
+    command: bash -c "/usr/local/bin/docker-entrypoint.sh && php-fpm"
     networks:
       pastelaria-network:
           ipv4_address: 172.30.0.100

@@ -21,3 +21,6 @@ yarn-error.log
 /build
 .phpunit.cache/
 .php-cs-fixer.cache
+public/reports
+.migrations_executed
+.composer_installed

@@ -52,6 +52,9 @@ RUN apt install git -y
 ADD https://github.com/mlocati/docker-php-extension-installer/releases/latest/download/install-php-extensions /usr/local/bin/
 RUN chmod +x /usr/local/bin/install-php-extensions && sync && install-php-extensions http
 
+COPY ./docker-entrypoint.sh /usr/local/bin/
+RUN chmod +x /usr/local/bin/docker-entrypoint.sh
+
 RUN groupadd dev -g 999
 RUN useradd dev -g dev -d /home/dev -m
 USER dev
