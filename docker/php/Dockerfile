@@ -27,14 +27,16 @@ RUN docker-php-ext-install mbstring
 RUN docker-php-ext-install gd
 
 ## XDEBUG
-RUN pecl install xdebug-3.2.0
+RUN pecl install xdebug-3.2.2
 RUN docker-php-ext-enable xdebug
 RUN echo "xdebug.mode=develop,debug,coverage\n" >> /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini
 RUN echo "xdebug.start_with_request=yes\n" >> /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini
-RUN echo "xdebug.client_port=9000" >> /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini
+RUN echo "xdebug.client_port=9000\n" >> /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini
 RUN echo "xdebug.remote_handler=dbgp\n" >> /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini
 RUN echo "xdebug.max_nesting_level=1024\n" >> /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini
-RUN echo "xdebug.discover_client_host=true" >> /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini
+RUN echo "xdebug.discover_client_host=1\n" >> /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini
+RUN echo "xdebug.idekey=PHPSTORM\n" >> /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini
+RUN echo "xdebug.show_error_trace=1\n" >> /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini
 
 ## REDIS
 RUN pecl install redis
@@ -43,7 +45,7 @@ RUN echo "date.timezone=America/Sao_Paulo" > /usr/local/etc/php/conf.d/timezone_
 RUN echo "memory_limit = 1024M" > /usr/local/etc/php/conf.d/memory_limit.ini
 
 ## COMPOSER
-RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
+COPY --from=composer:2.6.5 /usr/bin/composer /usr/local/bin/composer
 
 ## GIT
 RUN apt install git -y
