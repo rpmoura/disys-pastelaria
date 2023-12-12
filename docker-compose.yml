@@ -18,7 +18,6 @@ services:
     depends_on:
       - mysql
       - redis
-      - elasticsearch
     healthcheck:
       test: bash -c "[ -f /var/www/.composer_installed ] && [ -f /var/www/.migrations_executed ] &&  [ -f /var/www/.env ]"
       interval: 1m
@@ -62,28 +61,17 @@ services:
       api:
         condition: service_healthy
 
-  elasticsearch:
-    image: elasticsearch:7.10.1
-    container_name: pastelaria-elasticsearch
-    hostname: elasticsearch
-    environment:
-      - node.name=pastelaria-elasticsearch
-      - discovery.type=single-node
-      - discovery.seed_hosts=pastelaria-elasticsearch
-      #- cluster.initial_master_nodes=pastelaria-elasticsearch
-      - cluster.name=pastelaria-cluster
-      - bootstrap.memory_lock=true
-      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
-    ports:
-      - "9201:9200"
-      - "9301:9300"
+  php-queue:
+    image: pastelaria-api:latest
+    container_name: pastelaria-queue
+    command: ["php", "/var/www/artisan", "queue:work", "--sleep=3", "--tries=3"]
+    volumes:
+      - ./:/var/www/
     networks:
-      pastelaria-network:
-        ipv4_address: 172.30.0.103
-    ulimits:
-      memlock:
-        soft: -1
-        hard: -1
+      - pastelaria-network
+    depends_on:
+      api:
+        condition: service_healthy
 
   redis:
     image: redis:alpine3.18
