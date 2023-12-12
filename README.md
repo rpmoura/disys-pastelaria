@@ -1,66 +1,66 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+## Pastelaria Back-end Challenger
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+Este projeto foi construído utilizando o framework PHP Laravel, em sua versão 10.x.
 
-## About Laravel
+### Como executar
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+- Certifique-se de possuir o Docker e Docker Compose instalados em sua máquina (no projeto foram utilizadas as versões mais recentes, 24.0.6 e 2.23.0, respectivamente)
+- Clonar o repositório do Github. **(https://github.com/rpmoura/disys-pastelaria)**
+- Acessar a raíz do projeto (path/to/pastelaria)
+- No terminal, executar o seguinte comando:
+```sh
+docker-compose up -d --build
+```
+- Este comando irá subir todos os containers necessários para a execução aplicação
+- Note que os containers ```nginx``` e ```queue``` poderão levar mais tempo até ficarem aptos para uso, 
+pois necessitam que container ```api``` satisfaça a condição de teste definida no *healthcheck*
+- Em sua primeira execução, o container ```api``` irá instalar todas as dependëncias do projeto (definidas em composer.json), 
+além de realizar a criação das tabelas na base de dados (migrations) e povoar a base (seeder),
+além de definir e gerar a chave (APP_KEY) do ambiente (.env),
+logo, a conclusão dessa operação poderá levar alguns minutos. 
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+### Como funciona o healthcheck do container
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+O container ```api``` possui um ponto de entrada (docker-entrypoint.sh) que é chamado através do *command*, definido no docker-compose.yml.<br>
+Este ponto de entrada realiza as seguintes operações (iremos considerar a primeira execução):<br>
+- Passo 1: Faz a instalação das dependências do projeto ```composer install --optimize-autoloader```<br>
+Cria o arquivo de controle ```.composer_installed```,
+para sinalizar que este passo foi concluído.
+- Passo 2: Faz a migração da base de dados junto com a inserção dos dados iniciais ```php artisan migrate --seed```<br>
+Cria o arquivo de controle ```.migrations_executed```, para sinalizar que este passo foi concluído.
+- Passo 3: Faz a criação do arquivo de configuração do ambiente(.env) com base no arquivo de exemplo ```cp .env.example .env```<br>
+Gera a chave da aplicação ```php artisan key:generate```<br>
+> Nas próximas execuções do container, o healthcheck irá verificar a existência dos arquivo de controle, 
+> incluindo o .env, para definir o *status* do container ```api``` e seguir com a disponibilização dos containers que o possuem como dependência.
 
-## Learning Laravel
+### Envio de e-mail
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+- Os e-mails enviados poderão ser acessados no container ```mailhog```, através do link [http://localhost:8025](http://localhost:8025)
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+### Coleção de rotas
+- As rotas disponibilizadas neste projeto estão em uma *Postman Collection*.<br>
+Disponível no arquivo: ```back-end-challenge-disys.postman_collection.json```, na raíz do projeto, sendo possível realizar a importação.<br>
+- Também é possível consultar através [deste link](https://www.postman.com/orange-astronaut-4646/workspace/back-end-challenge-disys/collection/3227076-c5f3d425-6cd4-4b8f-9ed4-fb07e151ced0?action=share&creator=3227076).<br> 
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains over 2000 video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
-
-## Laravel Sponsors
-
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
-
-### Premium Partners
-
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[WebReinvent](https://webreinvent.com/)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Jump24](https://jump24.co.uk)**
-- **[Redberry](https://redberry.international/laravel/)**
-- **[Active Logic](https://activelogic.com)**
-- **[byte5](https://byte5.de)**
-- **[OP.GG](https://op.gg)**
-
-## Contributing
-
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
-
-## Code of Conduct
-
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
-
-## Security Vulnerabilities
-
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
-
-## License
-
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+### Comandos disponíveis
+- Execução dos testes
+```
+docker-exec -it pastelaria-api composer run test
+```
+- Geração do relatório de cobertura dos testes
+```
+docker-exec -it pastelaria-api composer run coverage
+```
+> O relatório gerado poderá ser acessado através do navegador em: [http://localhost:8099/reports/](http://localhost:8099/reports/)
+- Validação das regras PSR-12
+```
+docker-exec -it pastelaria-api composer run format:test
+```
+- Formatar código de acordo com as regras PSR-12
+```
+docker-exec -it pastelaria-api composer run format
+```
+#### Alguns pontos que poderiam ser considerados no futuro
+- Possibilidade de trabalhar com DTO, permitindo termos melhor controle dos dados trafegados entre as camadas da aplicação.
+- Adicionar filtros nos endpoints de listagem, como, por exemplo, listagem de pedidos de um cliente específico.
+- Adicionar autenticação, podendo ser através do Laravel Sanctum ou JWT.
