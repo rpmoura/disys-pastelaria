@@ -209,4 +209,23 @@ class ProductServiceTest extends TestCase
         $this->assertIsBool($result);
         $this->assertTrue($result);
     }
+
+    /**
+     * @test
+     */
+    public function shouldFindProductsByField()
+    {
+        $attributes = Product::factory()->make(['id' => 1])->toArray();
+        $product    = (new Product())->newInstance()->forceFill($attributes);
+
+        $this->repository->expects($this->once())
+            ->method('findWhereIn')
+            ->with('uuid', [$product->uuid])
+            ->willReturn(new Collection([$product]));
+
+        $result = $this->service->findBy('uuid', $product->uuid);
+
+        $this->assertInstanceOf(Collection::class, $result);
+        $this->assertCount(1, $result);
+    }
 }
