@@ -15,4 +15,11 @@ return [
         'listed_successfully'  => 'Products listed successfully.',
         'deleted_successfully' => 'Product deleted successfully',
     ],
+    'orders' => [
+        'created_successfully' => 'Order created successfully.',
+        'edited_successfully'  => 'Order edited successfully.',
+        'found_successfully'   => 'Order found successfully.',
+        'listed_successfully'  => 'Orders listed successfully.',
+        'deleted_successfully' => 'Order deleted successfully',
+    ],
 ];
