@@ -127,5 +127,15 @@ abstract class BaseRepository implements BaseRepositoryInterface
         return $this->model->findOrFail($id)->delete();
     }
 
+    public function sync(int $id, string $relation, $attributes, bool $detaching = true)
+    {
+        return $this->model->find($id)->{$relation}()->sync($attributes, $detaching);
+    }
+
+    public function findWhereIn(string $key, mixed $value, array $columns = ['*']): Collection
+    {
+        return $this->model->query()->whereIn($key, (array)$value)->get($columns);
+    }
+
     abstract public function model(): string;
 }
