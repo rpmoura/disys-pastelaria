@@ -2,15 +2,13 @@ version: "3.9"
 
 services:
   api:
-    build:
-      context: ./docker/php
-      dockerfile: Dockerfile
-    image: pastelaria-api:latest
+    image: rpmoura/php-8.2-fpm:1.0
     container_name: pastelaria-api
     hostname: api
     working_dir: /var/www/
     volumes:
       - ./:/var/www
+      - ./vendor:/var/www/vendor
     command: bash -c "/usr/local/bin/docker-entrypoint.sh && php-fpm"
     networks:
       pastelaria-network:
@@ -29,10 +27,10 @@ services:
     container_name: pastelaria-db
     hostname: mysql
     environment:
-      MYSQL_DATABASE: ${DB_DATABASE}
-      MYSQL_ROOT_PASSWORD: ${DB_PASSWORD}
-      MYSQL_PASSWORD: ${DB_PASSWORD}
-      MYSQL_USER: ${DB_USERNAME}
+      MYSQL_DATABASE: pastelaria
+      MYSQL_ROOT_PASSWORD: password
+      MYSQL_PASSWORD: password
+      MYSQL_USER: pastelaria-user
       SERVICE_TAGS: dev
       SERVICE_NAME: mysql
     command: --init-file /tmp/init.sql
@@ -62,7 +60,7 @@ services:
         condition: service_healthy
 
   php-queue:
-    image: pastelaria-api:latest
+    image: rpmoura/php-8.2-fpm:1.0
     container_name: pastelaria-queue
     command: ["php", "/var/www/artisan", "queue:work", "--sleep=3", "--tries=3"]
     volumes:
