@@ -2,32 +2,36 @@ version: "3.9"
 
 services:
   api:
-    build:
-      context: ./docker/php
-      dockerfile: Dockerfile
-    image: pastelaria-api:latest
+    image: rpmoura/php-8.2-fpm:1.0
     container_name: pastelaria-api
     hostname: api
     working_dir: /var/www/
     volumes:
       - ./:/var/www
+      - ./vendor:/var/www/vendor
+    command: bash -c "/usr/local/bin/docker-entrypoint.sh && php-fpm"
     networks:
       pastelaria-network:
           ipv4_address: 172.30.0.100
     depends_on:
       - mysql
       - redis
-      - elasticsearch
+      - mailhog
+    healthcheck:
+      test: bash -c "[ -f /var/www/.composer_installed ] && [ -f /var/www/.migrations_executed ] &&  [ -f /var/www/.env ]"
+      interval: 1m
+      timeout: 5s
+      retries: 30
 
   mysql:
     image: mysql:5.7
     container_name: pastelaria-db
     hostname: mysql
     environment:
-      MYSQL_DATABASE: ${DB_DATABASE}
-      MYSQL_ROOT_PASSWORD: ${DB_PASSWORD}
-      MYSQL_PASSWORD: ${DB_PASSWORD}
-      MYSQL_USER: ${DB_USERNAME}
+      MYSQL_DATABASE: pastelaria
+      MYSQL_ROOT_PASSWORD: password
+      MYSQL_PASSWORD: password
+      MYSQL_USER: pastelaria-user
       SERVICE_TAGS: dev
       SERVICE_NAME: mysql
     command: --init-file /tmp/init.sql
@@ -53,30 +57,20 @@ services:
       pastelaria-network:
           ipv4_address: 172.30.0.102
     depends_on:
-      - api
+      api:
+        condition: service_healthy
 
-  elasticsearch:
-    image: elasticsearch:7.10.1
-    container_name: pastelaria-elasticsearch
-    hostname: elasticsearch
-    environment:
-      - node.name=pastelaria-elasticsearch
-      - discovery.type=single-node
-      - discovery.seed_hosts=pastelaria-elasticsearch
-      #- cluster.initial_master_nodes=pastelaria-elasticsearch
-      - cluster.name=pastelaria-cluster
-      - bootstrap.memory_lock=true
-      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
-    ports:
-      - "9201:9200"
-      - "9301:9300"
+  php-queue:
+    image: rpmoura/php-8.2-fpm:1.0
+    container_name: pastelaria-queue
+    command: ["php", "/var/www/artisan", "queue:work", "--sleep=3", "--tries=3"]
+    volumes:
+      - ./:/var/www/
     networks:
-      pastelaria-network:
-        ipv4_address: 172.30.0.103
-    ulimits:
-      memlock:
-        soft: -1
-        hard: -1
+      - pastelaria-network
+    depends_on:
+      api:
+        condition: service_healthy
 
   redis:
     image: redis:alpine3.18
@@ -85,6 +79,16 @@ services:
     networks:
       pastelaria-network:
         ipv4_address: 172.30.0.104
+
+  mailhog:
+    image: mailhog/mailhog:latest
+    container_name: pastelaria-mailhog
+    ports:
+      - "8025:8025"
+      - "1025:1025"
+    networks:
+      pastelaria-network:
+        ipv4_address: 172.30.0.105
 
 networks:
   pastelaria-network:

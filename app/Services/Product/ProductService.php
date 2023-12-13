@@ -6,6 +6,7 @@ use App\DTO\FileUpload;
 use App\Models\Product;
 use App\Repositories\Product\ProductRepositoryInterface;
 use App\Services\FileManager\FileManagerServiceInterface;
+use Illuminate\Support\Collection;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class ProductService implements ProductServiceInterface
@@ -53,5 +54,10 @@ class ProductService implements ProductServiceInterface
     public function delete(Product $product): bool
     {
         return $this->repository->delete($product->id);
+    }
+
+    public function findBy(string $key, mixed $values): Collection
+    {
+        return $this->repository->findWhereIn($key, (array)$values);
     }
 }

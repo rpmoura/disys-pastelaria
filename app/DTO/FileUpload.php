@@ -8,6 +8,8 @@ class FileUpload
 {
     private readonly string $justContent;
 
+    private readonly string $name;
+
     public function __construct(private readonly string $directory, private readonly string $content)
     {
     }

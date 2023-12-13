@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Unit\Rules;
+namespace Rules;
 
 use App\Rules\ImageBase64;
 use Illuminate\Support\Facades\Validator;

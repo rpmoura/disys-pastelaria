@@ -2,4 +2,5 @@
 docker
 .idea
 .git
+.github
 /docker

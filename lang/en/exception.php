@@ -16,4 +16,7 @@ return [
     'product' => [
         'not_found' => 'Product not found.',
     ],
+    'order' => [
+        'not_found' => 'Order not found.',
+    ],
 ];

@@ -1,11 +1,11 @@
 includes:
-    - ./vendor/nunomaduro/larastan/extension.neon
+    - vendor/larastan/larastan/extension.neon
 
 parameters:
 
     paths:
         - app/
 
-    level: 5
+    level: 9
 
     ignoreErrors:

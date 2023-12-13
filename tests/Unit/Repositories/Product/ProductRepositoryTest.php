@@ -172,4 +172,16 @@ class ProductRepositoryTest extends TestCase
         $this->assertIsBool($result);
         $this->assertTrue($result);
     }
+
+    /**
+     * @test
+     */
+    public function shouldFindWhereInProducts()
+    {
+        $product = Product::factory()->create();
+
+        $result = $this->repository->findWhereIn('uuid', [$product->uuid]);
+
+        $this->assertInstanceOf(Collection::class, $result);
+    }
 }

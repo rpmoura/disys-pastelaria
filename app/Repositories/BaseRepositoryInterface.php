@@ -19,4 +19,8 @@ interface BaseRepositoryInterface
     public function get(array $columns = ['*']);
 
     public function delete(int $id);
+
+    public function sync(int $id, string $relation, $attributes, bool $detaching = true);
+
+    public function findWhereIn(string $key, mixed $value, array $columns = ['*']);
 }
