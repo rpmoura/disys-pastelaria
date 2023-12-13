@@ -16,6 +16,7 @@ services:
     depends_on:
       - mysql
       - redis
+      - mailhog
     healthcheck:
       test: bash -c "[ -f /var/www/.composer_installed ] && [ -f /var/www/.migrations_executed ] &&  [ -f /var/www/.env ]"
       interval: 1m
@@ -78,6 +79,16 @@ services:
     networks:
       pastelaria-network:
         ipv4_address: 172.30.0.104
+
+  mailhog:
+    image: mailhog/mailhog:latest
+    container_name: pastelaria-mailhog
+    ports:
+      - "8025:8025"
+      - "1025:1025"
+    networks:
+      pastelaria-network:
+        ipv4_address: 172.30.0.105
 
 networks:
   pastelaria-network:
