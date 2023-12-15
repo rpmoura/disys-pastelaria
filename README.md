@@ -64,3 +64,6 @@ docker-exec -it pastelaria-api composer run format
 - Possibilidade de trabalhar com DTO, permitindo termos melhor controle dos dados trafegados entre as camadas da aplicação.
 - Adicionar filtros nos endpoints de listagem, como, por exemplo, listagem de pedidos de um cliente específico.
 - Adicionar autenticação, podendo ser através do Laravel Sanctum ou JWT.
+- Manter o histórico de valor do produto, assim como a quantidade, para isso, basicamente,
+precisaríamos adicionar essas duas colunas na tabela de relacionamento entre pedidos e produtos,
+com isso, materíamos o valor do produto no momento do pedido, não sofrendo alterações caso o produto seja atualizado.
